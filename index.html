@@ -25,7 +25,7 @@
             z-index: 1;
         }
 
-        /* Glassmorphic Header - Updated to Atlas */
+        /* Glassmorphic Header */
         #header {
             position: absolute;
             top: 25px;
@@ -92,7 +92,7 @@
         #intel-panel {
             position: absolute;
             top: 0;
-            right: -450px; /* Hidden by default */
+            right: -450px; 
             width: 400px;
             height: 100vh;
             background: rgba(10, 10, 10, 0.75);
@@ -143,9 +143,7 @@
         }
 
         /* Placeholder styles for future Gemini Data */
-        .data-section {
-            margin-bottom: 25px;
-        }
+        .data-section { margin-bottom: 25px; }
         .data-label {
             font-size: 0.75rem;
             text-transform: uppercase;
@@ -188,6 +186,31 @@
         /* Smooth vector transitions */
         path.leaflet-interactive {
             transition: fill-opacity 0.3s ease, stroke-width 0.3s ease;
+        }
+
+        /* AVALLON ATLAS CUSTOM HOVER TOOLTIP */
+        .atlas-tooltip {
+            background: rgba(15, 15, 15, 0.8) !important;
+            border: 1px solid #00d2ff !important;
+            color: #ffffff !important;
+            border-radius: 4px !important;
+            padding: 6px 12px !important;
+            font-family: 'Helvetica Neue', Arial, sans-serif !important;
+            font-size: 0.85rem !important;
+            font-weight: 500 !important;
+            letter-spacing: 1px !important;
+            backdrop-filter: blur(5px) !important;
+            -webkit-backdrop-filter: blur(5px) !important;
+            box-shadow: 0 4px 15px rgba(0, 210, 255, 0.2) !important;
+        }
+        
+        /* Removes the default white Leaflet tooltip arrow */
+        .leaflet-tooltip-left.atlas-tooltip::before,
+        .leaflet-tooltip-right.atlas-tooltip::before,
+        .leaflet-tooltip-top.atlas-tooltip::before,
+        .leaflet-tooltip-bottom.atlas-tooltip::before {
+            border: none !important;
+            display: none !important;
         }
     </style>
 </head>
@@ -256,14 +279,26 @@
             fillOpacity: 0.15
         };
 
-        // Fetch Global GeoJSON Data
-        fetch('https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson')
+        // Fetch Global GeoJSON Data from Highly Stable Repository
+        fetch('https://raw.githubusercontent.com/johan/world.geo.json/master/countries.geo.json')
             .then(response => response.json())
             .then(data => {
                 geojsonLayer = L.geoJson(data, {
                     style: defaultStyle,
                     onEachFeature: function(feature, layer) {
-                        // Hover interactions
+                        
+                        // Extract Name Fallback Logic
+                        const countryName = feature.properties.name || "Strategic Region";
+
+                        // 1. Add Custom Hover Tooltip (Follows Cursor)
+                        layer.bindTooltip(countryName, {
+                            permanent: false,
+                            sticky: true, // This makes the label follow the mouse
+                            className: 'atlas-tooltip',
+                            opacity: 1
+                        });
+
+                        // 2. Hover Interactions (Border Glow)
                         layer.on('mouseover', function(e) {
                             layer.setStyle(highlightStyle);
                         });
@@ -271,10 +306,8 @@
                             geojsonLayer.resetStyle(layer);
                         });
                         
-                        // Click interaction: Open the panel
+                        // 3. Click interaction: Open the panel
                         layer.on('click', function(e) {
-                            // Data routing failsafe: checking multiple common GeoJSON property keys
-const countryName = feature.properties.ADMIN || feature.properties.name || feature.properties.NAME || feature.properties.sovereignt || "Strategic Region";
                             openPanel(countryName);
                             
                             // Slightly zoom to the clicked country
@@ -298,7 +331,6 @@ const countryName = feature.properties.ADMIN || feature.properties.name || featu
 
         function closePanel() {
             intelPanel.classList.remove('active');
-            // Reset map view slightly if desired, or leave as is
         }
     </script>
 </body>
