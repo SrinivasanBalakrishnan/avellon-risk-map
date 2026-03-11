@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-width=1.0">
+    <title>Avellon Intelligence | Global Risk Nexus</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <style>
+        /* Avellon Dark Mode Core */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            background-color: #050505; 
+            color: #e0e0e0;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            overflow: hidden;
+        }
+        
+        #map {
+            height: 100vh;
+            width: 100vw;
+            z-index: 1;
+        }
+
+        /* Glassmorphic Enterprise Header */
+        #header {
+            position: absolute;
+            top: 25px;
+            left: 25px;
+            z-index: 1000;
+            /* Glassmorphism core properties */
+            background: rgba(15, 15, 15, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 210, 255, 0.15);
+            border-left: 4px solid #00d2ff;
+            border-radius: 8px;
+            padding: 15px 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            transition: all 0.4s ease;
+            cursor: default;
+        }
+
+        /* Hover effect for the header */
+        #header:hover {
+            background: rgba(20, 20, 20, 0.6);
+            border: 1px solid rgba(0, 210, 255, 0.4);
+            border-left: 4px solid #00d2ff;
+            box-shadow: 0 8px 32px rgba(0, 210, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 1.6rem;
+            font-weight: 300;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px rgba(0, 210, 255, 0.2);
+        }
+        
+        span.blue {
+            color: #00d2ff;
+            font-weight: 600;
+            text-shadow: 0 0 15px rgba(0, 210, 255, 0.4);
+        }
+
+        /* Glassmorphic Leaflet Zoom Controls */
+        .leaflet-bar {
+            border: none !important;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5) !important;
+            border-radius: 8px !important;
+            overflow: hidden;
+        }
+
+        .leaflet-bar a {
+            background-color: rgba(15, 15, 15, 0.5) !important;
+            color: #00d2ff !important;
+            backdrop-filter: blur(10px) !important;
+            -webkit-backdrop-filter: blur(10px) !important;
+            border: 1px solid rgba(0, 210, 255, 0.15) !important;
+            transition: all 0.3s ease !important;
+            width: 36px !important;
+            height: 36px !important;
+            line-height: 36px !important;
+        }
+
+        /* Hover effect for map controls */
+        .leaflet-bar a:hover {
+            background-color: rgba(0, 210, 255, 0.15) !important;
+            color: #ffffff !important;
+            border: 1px solid rgba(0, 210, 255, 0.5) !important;
+            box-shadow: 0 0 15px rgba(0, 210, 255, 0.3) inset;
+        }
+        
+        /* Remove double borders between zoom buttons */
+        .leaflet-bar a:first-child {
+            border-bottom: none !important;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="header">
+        <h1>Avellon <span class="blue">Nexus</span></h1>
+    </div>
+
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <script>
+        const map = L.map('map', {
+            zoomControl: false 
+        }).setView([20, 0], 2);
+
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; OpenStreetMap &copy; CARTO',
+            subdomains: 'abcd',
+            maxZoom: 10, 
+            minZoom: 2
+        }).addTo(map);
+
+        L.control.zoom({
+            position: 'bottomright'
+        }).addTo(map);
+    </script>
+</body>
+</html>
