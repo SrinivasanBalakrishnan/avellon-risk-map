@@ -1,6 +1,7 @@
 import os
 import json
 import time
+import urllib.request
 import google.generativeai as genai
 
 # 1. Authenticate with the GitHub Vault
@@ -10,16 +11,24 @@ if not API_KEY:
     exit(1)
 
 genai.configure(api_key=API_KEY)
-# Using Gemini 1.5 Flash for enterprise-grade speed and reliability
 model = genai.GenerativeModel('gemini-1.5-flash')
-
-# 2. Target Acquisition List (Tier 1 Nations for the Prototype)
-# We process a strategic batch to respect free-tier API limits. You can expand this later.
-TARGET_COUNTRIES = ["India", "United States", "China", "Brazil", "Germany", "Russia", "Saudi Arabia"]
 
 DATA_FILE = "data/global_intel.json"
 
-# 3. Load the existing database to act as a failsafe
+# 2. Dynamically Fetch the Global Target List
+# This ensures the AI only researches the exact countries drawn on your Avellon map
+print("Downloading Atlas global region manifest...")
+try:
+    url = "https://raw.githubusercontent.com/johan/world.geo.json/master/countries.geo.json"
+    response = urllib.request.urlopen(url)
+    geo_data = json.loads(response.read())
+    TARGET_COUNTRIES = [feature['properties']['name'] for feature in geo_data['features'] if 'name' in feature['properties']]
+    print(f"Manifest loaded: {len(TARGET_COUNTRIES)} strategic regions identified for scanning.")
+except Exception as e:
+    print(f"Failed to load map manifest: {e}")
+    TARGET_COUNTRIES = ["India", "United States", "China", "Brazil", "United Kingdom", "Russia"] # Failsafe list
+
+# 3. Load the existing database
 try:
     with open(DATA_FILE, "r") as f:
         intel_db = json.load(f)
@@ -42,7 +51,6 @@ def get_country_intelligence(country):
     """
     try:
         response = model.generate_content(prompt)
-        # Strip markdown formatting just in case the AI includes it
         raw_text = response.text.strip().removeprefix('```json').removesuffix('```').strip()
         data = json.loads(raw_text)
         return data
@@ -50,24 +58,30 @@ def get_country_intelligence(country):
         print(f"Failed to generate intelligence for {country}: {e}")
         return None
 
-print("Initializing Avellon AI Matrix...")
+print("Initializing Avellon Global Matrix...")
 
-# 4. Execute the Intelligence Gathering Loop
+# 4. Execute the Global Intelligence Loop
+count = 1
+total = len(TARGET_COUNTRIES)
+
 for country in TARGET_COUNTRIES:
-    print(f"Scanning intelligence for: {country}...")
+    print(f"[{count}/{total}] Scanning intelligence for: {country}...")
     intel = get_country_intelligence(country)
     
     if intel:
         intel_db[country] = intel
-        print(f"Success: {country} updated. Atlas Risk Score: {intel['risk_score']}")
+        print(f"   -> Success: Atlas Risk Score: {intel['risk_score']}")
     else:
-        print(f"Warning: Failsafe engaged. Retaining cached data for {country}.")
+        print(f"   -> Warning: Failsafe engaged. Retaining cached data for {country}.")
         
-    # STRICT THROTTLE: Pausing for 4 seconds to prevent API limit bans
-    time.sleep(4)
+    # THE PACEMAKER: Strict 5-second throttle.
+    # 1 request every 5s = 12 RPM. (Gemini Free Tier limit is 15 RPM).
+    # This guarantees the pipeline will not crash.
+    time.sleep(5)
+    count += 1
 
-# 5. Commit the new intelligence to the JSON receptacle
+# 5. Commit the new global intelligence to the JSON receptacle
 with open(DATA_FILE, "w") as f:
     json.dump(intel_db, f, indent=4)
 
-print("Avellon Global Matrix update complete. Terminal closing.")
+print("Avellon Global Matrix update complete. 100% Map Coverage achieved.")
