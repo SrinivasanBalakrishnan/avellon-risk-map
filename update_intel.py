@@ -12,8 +12,8 @@ if not API_KEY:
 
 genai.configure(api_key=API_KEY)
 
-# UPGRADE: Switched to Gemini 2.0 Flash to bypass legacy 404 routing errors
-model = genai.GenerativeModel('gemini-2.0-flash')
+# OVERRIDE: Switched to Gemini 1.5 Flash-8B (High-volume free tier workhorse)
+model = genai.GenerativeModel('gemini-1.5-flash-8b')
 
 DATA_FILE = "data/global_intel.json"
 
@@ -75,8 +75,8 @@ for country in TARGET_COUNTRIES:
     else:
         print(f"   -> Warning: Failsafe engaged. Retaining cached data for {country}.")
         
-    # THE PACEMAKER: Strict 5-second throttle.
-    time.sleep(5)
+    # THE PACEMAKER: Strict 6-second throttle to guarantee we stay under the 15 RPM limit.
+    time.sleep(6)
     count += 1
 
 # 5. Commit the new global intelligence to the JSON receptacle
