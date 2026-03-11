@@ -273,7 +273,8 @@
                         
                         // Click interaction: Open the panel
                         layer.on('click', function(e) {
-                            const countryName = feature.properties.ADMIN;
+                            // Data routing failsafe: checking multiple common GeoJSON property keys
+const countryName = feature.properties.ADMIN || feature.properties.name || feature.properties.NAME || feature.properties.sovereignt || "Strategic Region";
                             openPanel(countryName);
                             
                             // Slightly zoom to the clicked country
