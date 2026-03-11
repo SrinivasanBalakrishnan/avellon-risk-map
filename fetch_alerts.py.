@@ -1,0 +1,71 @@
+import urllib.request
+import urllib.parse
+import xml.etree.ElementTree as ET
+import concurrent.futures
+import json
+import os
+import ssl
+import nltk
+from nltk.sentiment import SentimentIntensityAnalyzer
+
+# 1. Setup NLTK Intelligence Lexicon
+os.makedirs("outputs", exist_ok=True)
+try:
+    nltk.data.find('sentiment/vader_lexicon.zip')
+except LookupError:
+    nltk.download('vader_lexicon', quiet=True)
+sia = SentimentIntensityAnalyzer()
+
+# 2. Load Avellon Atlas Global Target List
+print("Downloading Atlas global region manifest...")
+ctx = ssl.create_default_context()
+ctx.check_hostname = False
+ctx.verify_mode = ssl.CERT_NONE
+
+url = "https://raw.githubusercontent.com/johan/world.geo.json/master/countries.geo.json"
+req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+geo_data = json.loads(urllib.request.urlopen(req, context=ctx).read())
+TARGET_COUNTRIES = [feature['properties']['name'] for feature in geo_data['features'] if 'name' in feature['properties']]
+
+print(f"Manifest loaded: {len(TARGET_COUNTRIES)} regions. Initiating multi-threaded Harvester...")
+
+def fetch_country_news(country):
+    """Fetches real-time headlines and calculates NLP sentiment."""
+    query = urllib.parse.quote(f'"{country}" AND (economy OR geopolitics OR supply chain OR military)')
+    rss_url = f"https://news.google.com/rss/search?q={query}&hl=en-US&gl=US&ceid=US:en"
+    
+    try:
+        req = urllib.request.Request(rss_url, headers={'User-Agent': 'Mozilla/5.0'})
+        xml_data = urllib.request.urlopen(req, timeout=5, context=ctx).read()
+        root = ET.fromstring(xml_data)
+        
+        headlines = []
+        sentiment_total = 0
+        count = 0
+        
+        for item in root.findall('.//item')[:3]: # Grab top 3 breaking stories
+            title = item.find('title').text
+            headlines.append(title)
+            sentiment_total += sia.polarity_scores(title)['compound']
+            count += 1
+            
+        avg_sentiment = sentiment_total / count if count > 0 else 0
+        return country, headlines, avg_sentiment
+    except Exception as e:
+        return country, [], 0
+
+# 3. Execute Multi-Threaded Scan (Massive Speed Boost)
+raw_intel = {}
+with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
+    results = executor.map(fetch_country_news, TARGET_COUNTRIES)
+    for country, headlines, sentiment in results:
+        raw_intel[country] = {
+            "headlines": headlines,
+            "nlp_sentiment": sentiment # Ranges from -1.0 (Extreme Risk) to +1.0 (Highly Positive)
+        }
+
+# 4. Save Raw Data for Gemini
+with open("outputs/raw_intel.json", "w") as f:
+    json.dump(raw_intel, f, indent=4)
+
+print("Harvester complete. Raw intelligence staged in outputs/raw_intel.json.")
