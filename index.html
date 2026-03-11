@@ -19,241 +19,102 @@
             overflow: hidden;
         }
         
-        #map {
-            height: 100vh;
-            width: 100vw;
-            z-index: 1;
-        }
+        #map { height: 100vh; width: 100vw; z-index: 1; }
 
         /* Glassmorphic Header */
         #header {
             position: absolute;
-            top: 25px;
-            left: 25px;
-            z-index: 1000;
+            top: 25px; left: 25px; z-index: 1000;
             background: rgba(15, 15, 15, 0.4);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(0, 210, 255, 0.15);
-            border-left: 4px solid #00d2ff;
-            border-radius: 8px;
-            padding: 15px 30px;
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 210, 255, 0.15); border-left: 4px solid #00d2ff;
+            border-radius: 8px; padding: 15px 30px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-            transition: all 0.4s ease;
-            cursor: default;
+            transition: all 0.4s ease; cursor: default;
         }
-
         #header:hover {
-            background: rgba(20, 20, 20, 0.6);
-            border: 1px solid rgba(0, 210, 255, 0.4);
-            border-left: 4px solid #00d2ff;
-            box-shadow: 0 8px 32px rgba(0, 210, 255, 0.2);
+            background: rgba(20, 20, 20, 0.6); border: 1px solid rgba(0, 210, 255, 0.4);
+            border-left: 4px solid #00d2ff; box-shadow: 0 8px 32px rgba(0, 210, 255, 0.2);
             transform: translateY(-2px);
         }
-
-        h1 {
-            margin: 0;
-            font-size: 1.6rem;
-            font-weight: 300;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            text-shadow: 0 0 10px rgba(0, 210, 255, 0.2);
-        }
-        
-        span.blue {
-            color: #00d2ff;
-            font-weight: 600;
-            text-shadow: 0 0 15px rgba(0, 210, 255, 0.4);
-        }
+        h1 { margin: 0; font-size: 1.6rem; font-weight: 300; letter-spacing: 3px; text-transform: uppercase; text-shadow: 0 0 10px rgba(0, 210, 255, 0.2); }
+        span.blue { color: #00d2ff; font-weight: 600; text-shadow: 0 0 15px rgba(0, 210, 255, 0.4); }
 
         /* Target Acquisition Search Bar */
         #search-container {
-            position: absolute;
-            top: 25px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1000;
+            position: absolute; top: 25px; left: 50%; transform: translateX(-50%); z-index: 1000;
         }
-
         #country-search {
-            background: rgba(15, 15, 15, 0.5);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(0, 210, 255, 0.3);
-            border-radius: 25px;
-            padding: 12px 25px;
-            color: #00d2ff;
-            font-size: 0.9rem;
-            width: 350px;
-            outline: none;
-            transition: all 0.3s ease;
-            text-align: center;
-            letter-spacing: 1px;
+            background: rgba(15, 15, 15, 0.5); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 210, 255, 0.3); border-radius: 25px;
+            padding: 12px 25px; color: #00d2ff; font-size: 0.9rem; width: 350px;
+            outline: none; transition: all 0.3s ease; text-align: center; letter-spacing: 1px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
         }
-
-        #country-search::placeholder {
-            color: rgba(0, 210, 255, 0.4);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-size: 0.8rem;
-        }
-
-        #country-search:focus {
-            border-color: #00d2ff;
-            box-shadow: 0 0 20px rgba(0, 210, 255, 0.4);
-            background: rgba(20, 20, 20, 0.8);
-            width: 400px; /* Expands slightly when typed in */
-        }
-
-        /* Error state for invalid searches */
+        #country-search::placeholder { color: rgba(0, 210, 255, 0.4); text-transform: uppercase; letter-spacing: 2px; font-size: 0.8rem; }
+        #country-search:focus { border-color: #00d2ff; box-shadow: 0 0 20px rgba(0, 210, 255, 0.4); background: rgba(20, 20, 20, 0.8); width: 400px; }
         #country-search.error-flash {
-            border-color: #ff3333 !important;
-            box-shadow: 0 0 20px rgba(255, 51, 51, 0.5) !important;
-            color: #ff3333 !important;
-            background: rgba(255, 51, 51, 0.1) !important;
+            border-color: #ff3333 !important; box-shadow: 0 0 20px rgba(255, 51, 51, 0.5) !important;
+            color: #ff3333 !important; background: rgba(255, 51, 51, 0.1) !important;
         }
 
         /* Custom Zoom Controls */
         .leaflet-bar {
-            border: none !important;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5) !important;
-            border-radius: 8px !important;
-            overflow: hidden;
-            margin-right: 25px !important;
-            margin-bottom: 25px !important;
+            border: none !important; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5) !important;
+            border-radius: 8px !important; overflow: hidden; margin-right: 25px !important; margin-bottom: 25px !important;
         }
         .leaflet-bar a {
-            background-color: rgba(15, 15, 15, 0.7) !important;
-            color: #00d2ff !important;
-            backdrop-filter: blur(10px) !important;
-            border: 1px solid rgba(0, 210, 255, 0.15) !important;
-            transition: all 0.3s ease !important;
+            background-color: rgba(15, 15, 15, 0.7) !important; color: #00d2ff !important;
+            backdrop-filter: blur(10px) !important; border: 1px solid rgba(0, 210, 255, 0.15) !important; transition: all 0.3s ease !important;
         }
-        .leaflet-bar a:hover {
-            background-color: rgba(0, 210, 255, 0.2) !important;
-            color: #ffffff !important;
-            border: 1px solid rgba(0, 210, 255, 0.5) !important;
-        }
+        .leaflet-bar a:hover { background-color: rgba(0, 210, 255, 0.2) !important; color: #ffffff !important; border: 1px solid rgba(0, 210, 255, 0.5) !important; }
 
         /* Slide-out Intelligence Panel */
         #intel-panel {
-            position: absolute;
-            top: 0;
-            right: -450px; 
-            width: 400px;
-            height: 100vh;
-            background: rgba(10, 10, 10, 0.75);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-left: 1px solid rgba(0, 210, 255, 0.3);
-            box-shadow: -10px 0 30px rgba(0, 0, 0, 0.8);
-            z-index: 1001;
-            transition: right 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-            display: flex;
-            flex-direction: column;
-            box-sizing: border-box;
-            padding: 30px;
+            position: absolute; top: 0; right: -450px; width: 400px; height: 100vh;
+            background: rgba(10, 10, 10, 0.85); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            border-left: 1px solid rgba(0, 210, 255, 0.3); box-shadow: -10px 0 30px rgba(0, 0, 0, 0.8);
+            z-index: 1001; transition: right 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            display: flex; flex-direction: column; box-sizing: border-box; padding: 30px; overflow-y: auto;
         }
-
         #intel-panel.active { right: 0; }
-
-        .panel-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding-bottom: 15px;
-            margin-bottom: 20px;
-        }
-
-        #country-name {
-            margin: 0;
-            font-size: 1.8rem;
-            font-weight: 400;
-            letter-spacing: 1px;
-            color: #ffffff;
-        }
-
-        .close-btn {
-            background: none;
-            border: none;
-            color: #888;
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: color 0.3s ease;
-        }
-
+        .panel-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 15px; margin-bottom: 20px; }
+        #country-name { margin: 0; font-size: 1.8rem; font-weight: 400; letter-spacing: 1px; color: #ffffff; }
+        .close-btn { background: none; border: none; color: #888; font-size: 1.5rem; cursor: pointer; transition: color 0.3s ease; }
         .close-btn:hover { color: #00d2ff; }
 
         /* Data Placeholder Styles */
         .data-section { margin-bottom: 25px; }
-        .data-label {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: #888;
-            margin-bottom: 8px;
-        }
-        .data-value {
-            font-size: 0.95rem;
-            line-height: 1.5;
-            color: #ccc;
-        }
+        .data-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; color: #888; margin-bottom: 8px; }
+        .data-value { font-size: 0.95rem; line-height: 1.5; color: #e0e0e0; }
         .score-box {
-            background: rgba(0, 210, 255, 0.1);
-            border: 1px solid rgba(0, 210, 255, 0.3);
-            border-radius: 6px;
-            padding: 15px;
-            text-align: center;
-            margin-top: auto;
-            margin-bottom: 20px;
+            background: rgba(0, 210, 255, 0.05); border: 1px solid rgba(0, 210, 255, 0.3);
+            border-radius: 6px; padding: 15px; text-align: center; margin-top: auto; margin-bottom: 20px;
         }
-        .score-number {
-            font-size: 2.5rem;
-            font-weight: 600;
-            color: #00d2ff;
-        }
+        .score-number { font-size: 2.5rem; font-weight: 600; color: #00d2ff; transition: color 0.3s; }
+        
+        /* Status Badges */
         .status-badge {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 4px;
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            background: rgba(255, 165, 0, 0.2);
-            color: orange;
-            border: 1px solid orange;
-            margin-bottom: 15px;
+            display: inline-block; padding: 4px 10px; border-radius: 4px; font-size: 0.7rem;
+            text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; text-align: center;
+            transition: all 0.3s ease;
         }
+        .status-pending { background: rgba(255, 165, 0, 0.1); color: orange; border: 1px solid orange; }
+        .status-active { background: rgba(0, 255, 204, 0.1); color: #00ffcc; border: 1px solid #00ffcc; box-shadow: 0 0 10px rgba(0, 255, 204, 0.2); }
 
-        path.leaflet-interactive {
-            transition: fill-opacity 0.3s ease, stroke-width 0.3s ease;
-        }
+        path.leaflet-interactive { transition: fill-opacity 0.3s ease, stroke-width 0.3s ease; }
 
         /* Custom Hover Tooltip */
         .atlas-tooltip {
-            background: rgba(15, 15, 15, 0.8) !important;
-            border: 1px solid #00d2ff !important;
-            color: #ffffff !important;
-            border-radius: 4px !important;
-            padding: 6px 12px !important;
-            font-family: 'Helvetica Neue', Arial, sans-serif !important;
-            font-size: 0.85rem !important;
-            font-weight: 500 !important;
-            letter-spacing: 1px !important;
-            backdrop-filter: blur(5px) !important;
-            -webkit-backdrop-filter: blur(5px) !important;
+            background: rgba(15, 15, 15, 0.8) !important; border: 1px solid #00d2ff !important;
+            color: #ffffff !important; border-radius: 4px !important; padding: 6px 12px !important;
+            font-family: 'Helvetica Neue', Arial, sans-serif !important; font-size: 0.85rem !important;
+            font-weight: 500 !important; letter-spacing: 1px !important;
+            backdrop-filter: blur(5px) !important; -webkit-backdrop-filter: blur(5px) !important;
             box-shadow: 0 4px 15px rgba(0, 210, 255, 0.2) !important;
         }
-        
-        .leaflet-tooltip-left.atlas-tooltip::before,
-        .leaflet-tooltip-right.atlas-tooltip::before,
-        .leaflet-tooltip-top.atlas-tooltip::before,
-        .leaflet-tooltip-bottom.atlas-tooltip::before {
-            border: none !important;
-            display: none !important;
-        }
+        .leaflet-tooltip-left.atlas-tooltip::before, .leaflet-tooltip-right.atlas-tooltip::before,
+        .leaflet-tooltip-top.atlas-tooltip::before, .leaflet-tooltip-bottom.atlas-tooltip::before { display: none !important; }
     </style>
 </head>
 <body>
@@ -273,21 +134,21 @@
             <button class="close-btn" onclick="closePanel()">✕</button>
         </div>
         
-        <div class="status-badge" id="sync-status">Awaiting Intelligence Sync...</div>
+        <div class="status-badge status-pending" id="sync-status">Awaiting Intelligence Sync...</div>
 
         <div class="data-section">
             <div class="data-label">Geopolitical Posture</div>
-            <div class="data-value" id="geo-data">Connecting to Avellon Global Matrix to retrieve latest strategic alerts and chokepoint analysis.</div>
+            <div class="data-value" id="geo-data">Connecting to Avellon Global Matrix to retrieve latest strategic alerts...</div>
         </div>
 
         <div class="data-section">
             <div class="data-label">Business Opportunities</div>
-            <div class="data-value" id="biz-data">Scanning for infrastructure, energy, and tech market volatility.</div>
+            <div class="data-value" id="biz-data">Scanning for infrastructure, energy, and tech market volatility...</div>
         </div>
 
         <div class="score-box">
             <div class="data-label">Atlas Risk Score</div>
-            <div class="score-number">--</div>
+            <div class="score-number" id="risk-score">--</div>
         </div>
     </div>
 
@@ -296,64 +157,52 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     
     <script>
+        // Initialize Map
         const map = L.map('map', { zoomControl: false }).setView([20, 0], 2);
-
         L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', {
-            attribution: '&copy; OpenStreetMap &copy; CARTO',
-            subdomains: 'abcd',
-            maxZoom: 10, 
-            minZoom: 2
+            attribution: '&copy; OpenStreetMap &copy; CARTO', subdomains: 'abcd', maxZoom: 10, minZoom: 2
         }).addTo(map);
-
         L.control.zoom({ position: 'bottomright' }).addTo(map);
 
+        // Global Variables
         let geojsonLayer;
+        let avellonIntelligence = {}; // This will hold our Gemini AI data
         const intelPanel = document.getElementById('intel-panel');
         const countryTitle = document.getElementById('country-name');
         const searchInput = document.getElementById('country-search');
         const dataList = document.getElementById('country-list');
 
-        const defaultStyle = {
-            color: "#00d2ff",
-            weight: 0.5,
-            opacity: 0.3,
-            fillColor: "#00d2ff",
-            fillOpacity: 0.02
-        };
+        // Fetch AI Intelligence JSON First
+        fetch('data/global_intel.json')
+            .then(response => {
+                if (!response.ok) throw new Error("Intelligence matrix not found yet.");
+                return response.json();
+            })
+            .then(data => {
+                avellonIntelligence = data;
+                console.log("Avellon Matrix Successfully Synchronized.");
+            })
+            .catch(error => console.warn("Avellon Matrix Offline. Operating on local cache.", error));
 
-        const highlightStyle = {
-            weight: 2,
-            opacity: 0.8,
-            fillOpacity: 0.15
-        };
+        const defaultStyle = { color: "#00d2ff", weight: 0.5, opacity: 0.3, fillColor: "#00d2ff", fillOpacity: 0.02 };
+        const highlightStyle = { weight: 2, opacity: 0.8, fillOpacity: 0.15 };
 
-        // Fetch Global GeoJSON Data
+        // Fetch Global Map Data
         fetch('https://raw.githubusercontent.com/johan/world.geo.json/master/countries.geo.json')
             .then(response => response.json())
             .then(data => {
                 geojsonLayer = L.geoJson(data, {
                     style: defaultStyle,
                     onEachFeature: function(feature, layer) {
-                        
                         const countryName = feature.properties.name || "Strategic Region";
-
-                        // Populate the autocomplete dropdown list
                         if (countryName !== "Strategic Region") {
                             const option = document.createElement('option');
                             option.value = countryName;
                             dataList.appendChild(option);
                         }
-
-                        layer.bindTooltip(countryName, {
-                            permanent: false,
-                            sticky: true,
-                            className: 'atlas-tooltip',
-                            opacity: 1
-                        });
-
+                        layer.bindTooltip(countryName, { permanent: false, sticky: true, className: 'atlas-tooltip', opacity: 1 });
                         layer.on('mouseover', function(e) { layer.setStyle(highlightStyle); });
                         layer.on('mouseout', function(e) { geojsonLayer.resetStyle(layer); });
-                        
                         layer.on('click', function(e) {
                             openPanel(countryName);
                             map.fitBounds(layer.getBounds(), { padding: [100, 100], maxZoom: 4, animate: true, duration: 1 });
@@ -363,39 +212,66 @@
             })
             .catch(error => console.error("Error loading Atlas Geodata:", error));
 
-        // Search Box Logic
+        // Search Engine
         searchInput.addEventListener('keypress', function(e) {
-            // Only execute when the user presses "Enter"
             if (e.key === 'Enter') {
                 const query = this.value.trim().toLowerCase();
                 let found = false;
-
-                // Scan all countries in the map layer
                 geojsonLayer.eachLayer(function(layer) {
                     const name = layer.feature.properties.name;
                     if (name && name.toLowerCase() === query) {
-                        // Target Acquired: Fly to location and open panel
                         map.fitBounds(layer.getBounds(), { padding: [100, 100], maxZoom: 4, animate: true, duration: 1 });
                         openPanel(name);
                         found = true;
                     }
                 });
-
-                if (found) {
-                    searchInput.value = ''; // Clear search bar
-                    searchInput.blur(); // Remove focus
-                } else {
-                    // Target Not Found: Flash error
+                if (found) { searchInput.value = ''; searchInput.blur(); } 
+                else {
                     searchInput.classList.add('error-flash');
-                    setTimeout(() => {
-                        searchInput.classList.remove('error-flash');
-                    }, 800);
+                    setTimeout(() => searchInput.classList.remove('error-flash'), 800);
                 }
             }
         });
 
+        // The Intelligence Injector Engine
         function openPanel(name) {
             countryTitle.innerText = name;
+            
+            const statusBadge = document.getElementById('sync-status');
+            const geoData = document.getElementById('geo-data');
+            const bizData = document.getElementById('biz-data');
+            const riskScore = document.getElementById('risk-score');
+
+            // Check if Gemini generated data for this country
+            if (avellonIntelligence[name]) {
+                const intel = avellonIntelligence[name];
+                
+                // Active State UI
+                statusBadge.innerText = "ACTIVE INTELLIGENCE";
+                statusBadge.className = "status-badge status-active";
+                
+                // Inject Gemini Data
+                geoData.innerText = intel.geo_posture;
+                bizData.innerText = intel.biz_opportunities;
+                riskScore.innerText = intel.risk_score;
+                
+                // Dynamic Risk Coloring
+                if(intel.risk_score >= 70) riskScore.style.color = "#00ffcc"; // Green/Safe
+                else if(intel.risk_score >= 40) riskScore.style.color = "orange"; // Yellow/Moderate
+                else riskScore.style.color = "#ff3333"; // Red/High Risk
+
+            } else {
+                // Pending State UI (For countries not yet processed by the Python script)
+                statusBadge.innerText = "INTELLIGENCE PENDING";
+                statusBadge.className = "status-badge status-pending";
+                
+                // Graceful Failsafe Text
+                geoData.innerText = "Target region queued for next automated API sync. Monitoring local signals...";
+                bizData.innerText = "Awaiting macro-economic data parsing. Check back after next 24hr cycle.";
+                riskScore.innerText = "--";
+                riskScore.style.color = "#00d2ff"; // Reset to default blue
+            }
+
             intelPanel.classList.add('active');
         }
 
