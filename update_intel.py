@@ -11,12 +11,13 @@ if not API_KEY:
     exit(1)
 
 genai.configure(api_key=API_KEY)
-model = genai.GenerativeModel('gemini-1.5-flash')
+
+# UPGRADE: Switched to Gemini 2.0 Flash to bypass legacy 404 routing errors
+model = genai.GenerativeModel('gemini-2.0-flash')
 
 DATA_FILE = "data/global_intel.json"
 
 # 2. Dynamically Fetch the Global Target List
-# This ensures the AI only researches the exact countries drawn on your Avellon map
 print("Downloading Atlas global region manifest...")
 try:
     url = "https://raw.githubusercontent.com/johan/world.geo.json/master/countries.geo.json"
@@ -26,7 +27,7 @@ try:
     print(f"Manifest loaded: {len(TARGET_COUNTRIES)} strategic regions identified for scanning.")
 except Exception as e:
     print(f"Failed to load map manifest: {e}")
-    TARGET_COUNTRIES = ["India", "United States", "China", "Brazil", "United Kingdom", "Russia"] # Failsafe list
+    TARGET_COUNTRIES = ["India", "United States", "China", "Brazil", "United Kingdom", "Russia"] 
 
 # 3. Load the existing database
 try:
@@ -75,8 +76,6 @@ for country in TARGET_COUNTRIES:
         print(f"   -> Warning: Failsafe engaged. Retaining cached data for {country}.")
         
     # THE PACEMAKER: Strict 5-second throttle.
-    # 1 request every 5s = 12 RPM. (Gemini Free Tier limit is 15 RPM).
-    # This guarantees the pipeline will not crash.
     time.sleep(5)
     count += 1
 
