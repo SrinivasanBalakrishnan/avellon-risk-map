@@ -66,6 +66,54 @@
             text-shadow: 0 0 15px rgba(0, 210, 255, 0.4);
         }
 
+        /* Target Acquisition Search Bar */
+        #search-container {
+            position: absolute;
+            top: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+        }
+
+        #country-search {
+            background: rgba(15, 15, 15, 0.5);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 210, 255, 0.3);
+            border-radius: 25px;
+            padding: 12px 25px;
+            color: #00d2ff;
+            font-size: 0.9rem;
+            width: 350px;
+            outline: none;
+            transition: all 0.3s ease;
+            text-align: center;
+            letter-spacing: 1px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+
+        #country-search::placeholder {
+            color: rgba(0, 210, 255, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.8rem;
+        }
+
+        #country-search:focus {
+            border-color: #00d2ff;
+            box-shadow: 0 0 20px rgba(0, 210, 255, 0.4);
+            background: rgba(20, 20, 20, 0.8);
+            width: 400px; /* Expands slightly when typed in */
+        }
+
+        /* Error state for invalid searches */
+        #country-search.error-flash {
+            border-color: #ff3333 !important;
+            box-shadow: 0 0 20px rgba(255, 51, 51, 0.5) !important;
+            color: #ff3333 !important;
+            background: rgba(255, 51, 51, 0.1) !important;
+        }
+
         /* Custom Zoom Controls */
         .leaflet-bar {
             border: none !important;
@@ -108,9 +156,7 @@
             padding: 30px;
         }
 
-        #intel-panel.active {
-            right: 0;
-        }
+        #intel-panel.active { right: 0; }
 
         .panel-header {
             display: flex;
@@ -138,11 +184,9 @@
             transition: color 0.3s ease;
         }
 
-        .close-btn:hover {
-            color: #00d2ff;
-        }
+        .close-btn:hover { color: #00d2ff; }
 
-        /* Placeholder styles for future Gemini Data */
+        /* Data Placeholder Styles */
         .data-section { margin-bottom: 25px; }
         .data-label {
             font-size: 0.75rem;
@@ -183,12 +227,11 @@
             margin-bottom: 15px;
         }
 
-        /* Smooth vector transitions */
         path.leaflet-interactive {
             transition: fill-opacity 0.3s ease, stroke-width 0.3s ease;
         }
 
-        /* AVALLON ATLAS CUSTOM HOVER TOOLTIP */
+        /* Custom Hover Tooltip */
         .atlas-tooltip {
             background: rgba(15, 15, 15, 0.8) !important;
             border: 1px solid #00d2ff !important;
@@ -204,7 +247,6 @@
             box-shadow: 0 4px 15px rgba(0, 210, 255, 0.2) !important;
         }
         
-        /* Removes the default white Leaflet tooltip arrow */
         .leaflet-tooltip-left.atlas-tooltip::before,
         .leaflet-tooltip-right.atlas-tooltip::before,
         .leaflet-tooltip-top.atlas-tooltip::before,
@@ -218,6 +260,11 @@
 
     <div id="header">
         <h1>Avellon <span class="blue">Atlas</span></h1>
+    </div>
+
+    <div id="search-container">
+        <input type="text" id="country-search" placeholder="Enter Target Region..." list="country-list" autocomplete="off">
+        <datalist id="country-list"></datalist>
     </div>
 
     <div id="intel-panel">
@@ -263,8 +310,9 @@
         let geojsonLayer;
         const intelPanel = document.getElementById('intel-panel');
         const countryTitle = document.getElementById('country-name');
+        const searchInput = document.getElementById('country-search');
+        const dataList = document.getElementById('country-list');
 
-        // Styles for the geopolitical borders
         const defaultStyle = {
             color: "#00d2ff",
             weight: 0.5,
@@ -279,7 +327,7 @@
             fillOpacity: 0.15
         };
 
-        // Fetch Global GeoJSON Data from Highly Stable Repository
+        // Fetch Global GeoJSON Data
         fetch('https://raw.githubusercontent.com/johan/world.geo.json/master/countries.geo.json')
             .then(response => response.json())
             .then(data => {
@@ -287,43 +335,65 @@
                     style: defaultStyle,
                     onEachFeature: function(feature, layer) {
                         
-                        // Extract Name Fallback Logic
                         const countryName = feature.properties.name || "Strategic Region";
 
-                        // 1. Add Custom Hover Tooltip (Follows Cursor)
+                        // Populate the autocomplete dropdown list
+                        if (countryName !== "Strategic Region") {
+                            const option = document.createElement('option');
+                            option.value = countryName;
+                            dataList.appendChild(option);
+                        }
+
                         layer.bindTooltip(countryName, {
                             permanent: false,
-                            sticky: true, // This makes the label follow the mouse
+                            sticky: true,
                             className: 'atlas-tooltip',
                             opacity: 1
                         });
 
-                        // 2. Hover Interactions (Border Glow)
-                        layer.on('mouseover', function(e) {
-                            layer.setStyle(highlightStyle);
-                        });
-                        layer.on('mouseout', function(e) {
-                            geojsonLayer.resetStyle(layer);
-                        });
+                        layer.on('mouseover', function(e) { layer.setStyle(highlightStyle); });
+                        layer.on('mouseout', function(e) { geojsonLayer.resetStyle(layer); });
                         
-                        // 3. Click interaction: Open the panel
                         layer.on('click', function(e) {
                             openPanel(countryName);
-                            
-                            // Slightly zoom to the clicked country
-                            map.fitBounds(layer.getBounds(), {
-                                padding: [100, 100],
-                                maxZoom: 4,
-                                animate: true,
-                                duration: 1
-                            });
+                            map.fitBounds(layer.getBounds(), { padding: [100, 100], maxZoom: 4, animate: true, duration: 1 });
                         });
                     }
                 }).addTo(map);
             })
             .catch(error => console.error("Error loading Atlas Geodata:", error));
 
-        // UI Panel Controls
+        // Search Box Logic
+        searchInput.addEventListener('keypress', function(e) {
+            // Only execute when the user presses "Enter"
+            if (e.key === 'Enter') {
+                const query = this.value.trim().toLowerCase();
+                let found = false;
+
+                // Scan all countries in the map layer
+                geojsonLayer.eachLayer(function(layer) {
+                    const name = layer.feature.properties.name;
+                    if (name && name.toLowerCase() === query) {
+                        // Target Acquired: Fly to location and open panel
+                        map.fitBounds(layer.getBounds(), { padding: [100, 100], maxZoom: 4, animate: true, duration: 1 });
+                        openPanel(name);
+                        found = true;
+                    }
+                });
+
+                if (found) {
+                    searchInput.value = ''; // Clear search bar
+                    searchInput.blur(); // Remove focus
+                } else {
+                    // Target Not Found: Flash error
+                    searchInput.classList.add('error-flash');
+                    setTimeout(() => {
+                        searchInput.classList.remove('error-flash');
+                    }, 800);
+                }
+            }
+        });
+
         function openPanel(name) {
             countryTitle.innerText = name;
             intelPanel.classList.add('active');
