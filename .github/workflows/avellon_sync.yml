@@ -1,16 +1,15 @@
 name: Avellon Intelligence Daily Sync
 
-# Controls when the action will run
 on:
   schedule:
-    - cron: '0 0 * * *' # Automated execution at midnight UTC every day
-  workflow_dispatch: # Allows you to manually trigger the script with a button
+    - cron: '0 0 * * *' 
+  workflow_dispatch: 
 
 jobs:
   update-intelligence:
     runs-on: ubuntu-latest
     permissions:
-      contents: write # Grants the bot permission to save data back to your repo
+      contents: write 
 
     steps:
       - name: Access Avellon Repository
@@ -21,10 +20,13 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install AI Dependencies
-        run: pip install google-generativeai
+      - name: Install Enterprise Dependencies
+        run: pip install google-generativeai feedparser nltk
 
-      - name: Execute Avellon AI Matrix
+      - name: Stage 1 - Run Data Harvester (Edge Computing)
+        run: python fetch_alerts.py
+
+      - name: Stage 2 - Run AI Synthesizer (Gemini Matrix)
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: python update_intel.py
@@ -33,6 +35,6 @@ jobs:
         run: |
           git config --global user.name "Avellon Automaton"
           git config --global user.email "bot@avellonintelligence.com"
-          git add data/global_intel.json
-          git commit -m "Strategic Update: AI Intelligence Sync" || exit 0
+          git add data/global_intel.json outputs/raw_intel.json
+          git commit -m "Strategic Update: Hybrid RAG Intelligence Sync" || exit 0
           git push
